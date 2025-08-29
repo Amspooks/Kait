@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" type="text/css" href="styles.css" />
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+	#flyButton {
+  position: relative; /* Needed for animations */
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 1s ease, opacity 1s ease;
+}
+
+#flyButton.fly-off {
+  transform: translate(500px, -500px); /* Adjust direction and distance */
+  opacity: 0; /* Makes the button fade out */
+}
+	hr {
+  border: none;
+  height: 2px; /* Adjust thickness */
+  background-color: black; /* Set to the desired color */
+  margin: 20px 0; /* Adjust spacing */
+}
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+	p {
+  font-family: papyrus;
+  font-size: 20px;
+  color: #000000;
+}
+h1 {
+  font-family: sans-serif;
+  font-size: 20px;
+  color: #000000;
+}
+h2 {
+  font-family: papyrus;
+  font-size: 20px;
+  color: #000000;
+}
+h3 {
+  font-family: papyrus;
+  font-size: 20px;
+  color: #000000;
+}
+h4 {
+  font-family: papyrus;
+  font-size: 20px;
+  color: #000000;
+}
+div{
+  font-family: papyrus;
+  font-size: 20px;
+  color: #000000;
+}
+body {
+	background-color: #f8fafc;
+}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a class="active" href="index.html">Home</a>
+  <a href="index.html">Dog Time</a>
+  <a href="threepage.html">Spooky</a>
+</div>
+
+<div style="padding-left:16px">
+</div>
+
+</body>
+
+	
+  <style>
+  .button {
+    background-color: #FF6B6B;
+    border: 2px solid #00509E;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+  </style>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="background-color: #ffbbbb;">
+  <h1 id="yourSite" class="center">Your site<3</h1>
+  <h4>You have wasted:</h4>
+  <h3 id="timerytimer">0</h3>
+  <h4>seconds on this site</h4>
+  <Br>
+    <!--You're so short lol-->
+  <p>Hello! Here is a website containing a bunch of shitty stuff for you!!! There are a bunch of hidden <a style="color:black" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" title="You found me!"> secrets</a> for your personal entertainment. Have fun!</p>
+  <audio id="sound1" src="Metal pipe falling sound effect but its more violent.mp3" preload="auto"></audio>
+   <button id="funbutton" style="background-color: black;color:green;border-radius:5px;" onclick="clickSoundButton()" title="Don't do it">
+    Fun sound!
+  </button> 
+    <script>
+      var counter1 = 0;
+      function clickSoundButton() {
+        counter1++;
+        console.log(counter1)
+        document.getElementById('sound1').cloneNode(true).play();
+        if (counter1 >= 10)
+        {
+          window.open("https://www.youtube.com/shorts/YFRRwPNKv0A");
+        }
+      }
+    </script>
+<br>
+<br>
+	<hr>
+  <script id = btncode>
+    function changeImage() {
+      const img = document.getElementById("thumbsupimage");
+      if (button.pressed) {
+        BtnPressed = !BtnPressed;
+      }
+      if (BtnPressed) {
+        button.textContent = "Hello!";
+      }
+      else{
+        button.textContent = "Bye!";
+      }
+    }
+  </script>
+  <script id = yippee>
+    const counter = 0;
+    let BtnPressed = false;
+    function changeImage() {
+      const img = document.getElementById("thumbsupguy");
+      const button = document.getElementById("funbutton");
+      BtnPressed = !BtnPressed;
+      if (BtnPressed) {
+        img.src = "Hero.jpeg";
+      }
+      else{
+        img.src = "Mari.jpeg";
+      }
+    }
+    
+  </script>
+	<script>
+    // Get the paragraph element
+    const paragraph = document.getElementById('yourSite');
+
+    // Add a click event listener
+    paragraph.addEventListener('click', function() {
+        alert("You're the best boyfriend ever. You mean the entire world to me.");
+    });
+</script>	
+<script id="timer">
+  let number = 0;
+  const numberElement = document.getElementById("timerytimer");
+
+  setInterval(() => {
+    number++;
+    numberElement.textContent = number;
+
+    // Make the timer clickable after 100 seconds
+    if (number >= 100 && !numberElement.classList.contains("clickable")) {
+      numberElement.classList.add("clickable");
+    }
+  }, 1000);
+
+  // Add a click event to the timer after 100 seconds
+  numberElement.addEventListener("click", () => {
+    if (number >= 100) {
+      alert("I love you :D");
+    }
+  });
+</script>
+  <div class="container">
+    <img src="Mari.jpeg" alt="Avatar" class="image" id="thumbsupguy" width="300" class="center" onclick="changeImage()" margin=auto>
+    <div class="overlay">
+      <div class="text" title="More images!">Click to change the image(Us Fr Fr)</div> 
+    </div>
+  </div>
+	<hr>
+	<br>
+	<br>
+  <video controls src="ur cute.mp4" width="500">
+  </video>
+<br>
+<br>
+<a href="https://patreon.com/Amspooks?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink">
+<button class="btn">I need money</button>
+</a>
+<br>
+<br>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 40px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<button id="flyButton">I might do something.</button>
+<script>
+  const button = document.getElementById("flyButton");
+
+  button.addEventListener("click", () => {
+    button.innerText = "Weee!!!"; // Change the text
+    button.classList.add("fly-off"); // Add the flying animation class
+
+    // Optionally, you can remove the button after the animation
+    setTimeout(() => {
+      button.style.display = "none"; // Hide it completely
+    }, 1000); // Match the duration of the CSS animation
+  });
+</script>
+
+    </script>
+	<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hi!!!</title>
+</head>
+	<br>
+	<br>
+	<hr>
+<body>
+    <h1>Just wanna say, nice music taste.</h1>
+	<h2>I couldn't fit everything in one playlist so I split it into two.</h2>
+
+    <div class="playlist-container">
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/7wOMLfkXS0oSnY6bnTRIhW?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+	    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/2jPk2hRPlkWkrU8577pJ7c?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+</body>
+</html>
+</body>
+</section>
+</body>
+</html>
