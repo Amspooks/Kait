@@ -404,7 +404,7 @@ div{
 
     function addbread()
     {
-      document.getElementById("DogCount").innerText = "DogCount: "+(breadinfo.length+1)
+      document.getElementById("DogCount").innerText = "CatCount: "+(breadinfo.length+1)
       imgnum = Math.floor(Math.random()*bread.length);
       breadinfo.push(
         {
@@ -419,7 +419,7 @@ div{
     }
 
     function clearbread() {
-      document.getElementById("DogCount").innerText = "DogCount: 0"
+      document.getElementById("DogCount").innerText = "CatCount: 0"
       breadinfo=[]
     }
     let draggedBread = null; // Tracks the bread currently being dragged
