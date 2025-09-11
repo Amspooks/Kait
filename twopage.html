@@ -121,15 +121,51 @@ body {
     <!--You're so short lol-->
   <p>Hello! Here is a website containing a bunch of stuff for you!!! There are a bunch of hidden <a style="color:black" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" title="You found me!"> secrets</a> for your personal entertainment. Have fun!</p>
   <audio id="sound1" src="Metal pipe falling sound effect but its more violent.mp3" preload="auto"></audio>
-   <button id="funbutton" style="background-color: black;color:green;border-radius:5px;" onclick="clickSoundButton()" title="Don't do it">
-    Fun sound!
+	<button id="playRandomSound" style="background-color: black;color:green;border-radius:5px;" onclick="clickSoundButton()" title="Don't do it">
+
+    <audio id="sound2" src="sound1.mp3"></audio>
+    <audio id="sound3" src="sound2.mp3"></audio>
+    <audio id="sound4" src="sound3.mp3"></audio>
+    <!-- Add more audio elements as needed -->
+
+    <script src="script.js"></script>
   </button> 
     <script>
-      var counter1 = 0;
+		      var counter1 = 0;
       function clickSoundButton() {
         counter1++;
         console.log(counter1)
         document.getElementById('sound1').cloneNode(true).play();
+        if (counter1 >= 10)
+        {
+          window.open("https://www.youtube.com/shorts/YFRRwPNKv0A");
+        }
+      }
+      var counter1 = 0;
+      function clickSoundButton() {
+        counter1++;
+        console.log(counter1)
+        document.getElementById('sound2').cloneNode(true).play();
+        if (counter1 >= 10)
+        {
+          window.open("https://www.youtube.com/shorts/YFRRwPNKv0A");
+        }
+      }
+		      var counter1 = 0;
+      function clickSoundButton() {
+        counter1++;
+        console.log(counter1)
+        document.getElementById('sound3').cloneNode(true).play();
+        if (counter1 >= 10)
+        {
+          window.open("https://www.youtube.com/shorts/YFRRwPNKv0A");
+        }
+      }
+				      var counter1 = 0;
+      function clickSoundButton() {
+        counter1++;
+        console.log(counter1)
+        document.getElementById('sound4').cloneNode(true).play();
         if (counter1 >= 10)
         {
           window.open("https://www.youtube.com/shorts/YFRRwPNKv0A");
@@ -161,10 +197,10 @@ body {
       const button = document.getElementById("funbutton");
       BtnPressed = !BtnPressed;
       if (BtnPressed) {
-        img.src = "Hero.jpeg";
+        img.src = "noelle.png";
       }
       else{
-        img.src = "Mari.jpeg";
+        img.src = "noellehappy.png";
       }
     }
     
@@ -200,7 +236,7 @@ body {
   });
 </script>
   <div class="container">
-    <img src="Mari.jpeg" alt="Avatar" class="image" id="thumbsupguy" width="300" class="center" onclick="changeImage()" margin=auto>
+    <img src="noellehappy.png" alt="Avatar" class="image" id="thumbsupguy" width="300" class="center" onclick="changeImage()" margin=auto>
     <div class="overlay">
       <div class="text" title="More images!">Click to change the image</div> 
     </div>
@@ -254,6 +290,31 @@ body {
       button.style.display = "none"; // Hide it completely
     }, 1000); // Match the duration of the CSS animation
   });
+
+	document.addEventListener('DOMContentLoaded', () => {
+    const playButton = document.getElementById('playRandomSound');
+    const audioElements = [
+        document.getElementById('sound2'),
+        document.getElementById('sound3'),
+        document.getElementById('sound4')
+        // Add more audio elements to this array
+    ];
+
+    playButton.addEventListener('click', () => {
+        // Stop any currently playing sounds
+        audioElements.forEach(audio => {
+            audio.pause();
+            audio.currentTime = 0; // Rewind to the beginning
+        });
+
+        // Select a random audio element
+        const randomIndex = Math.floor(Math.random() * audioElements.length);
+        const selectedSound = audioElements[randomIndex];
+
+        // Play the selected sound
+        selectedSound.play();
+    });
+});
 </script>
 
     </script>
