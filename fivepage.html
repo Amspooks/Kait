@@ -1,0 +1,489 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+</style>
+</head>
+<body onload = "setupgameiguess()">
+
+<div class="topnav">
+  <a href="index.html">Home</a>
+  <a href="twopage.html">Bread Time</a>
+  <a href="threepage.html">Spooky</a>
+  <a href="fourpage.html">Buttons
+  <a class="active" href="fivepage.html">Racing</a>
+</div>
+
+<div style="padding-left:16px">
+</div>
+
+
+  
+<h1 id = "errormessages">Use the up and down arrow keys to move... well... up and down</h1>
+
+<button id = "start" onclick = "startgame()">Start Game!</button>
+
+<canvas id="carbox" width="900" height="450" style="border:1px solid #dfdfdf;"> haha your browser no work</canvas>
+<script>
+  var canvas = document.getElementById("carbox") // get the canvas and stuff
+  var ctx = canvas.getContext("2d") // enables drawing on the canvas
+
+  var obstacleobj = [] // the list of actual image objects
+  var obstacles = ["dogshock.png", "guy.png", "pointbaby.jpeg", "asdf.jpeg", "arrow.webp", "baby.jpeg", "pik.jpeg", "puddingpies.jpg", "sadge.jpeg"] //sources to the obstacle images, edit this manually
+
+  var activeobstacles = [] // format :  [filename, lane, x], obstacles that will be drawn actively
+  obstaclelist = {} // format : filename:{width, height}
+  var crashanimobj = [] // Crash Animation Objects
+
+  var carlane = 2
+  var time = 0
+  var speed = 0
+  var distance = 0
+  var difficulty = 100
+  var framesuntilobstacle = difficulty
+  var crashed = false
+  var alertcounter = 25
+  var nearmisscounter = 0
+  var lanechain = 0
+  var chainlane = 0
+  var scale = 100 //100 is normalsize
+  var lastchain = false
+
+  var separator1offset = 0
+  var separator2offset = 0
+  var lineLength = 50 //HOW LONG THE LANE LINES ARE
+
+  var crashanimcounter = 0
+
+  var gamesim
+
+  function setupgameiguess() {
+    for (const obstacle of obstacles) {
+      im = new Image() // set temporary variable "im" to a new image object
+      im.src="obstacles/"+obstacle // defining the source of the image object previously created
+      
+      obstacleobj.push(im) // add the obstacle image object to obstacleobj
+
+      // dont worry about this, all you have to know is that it adds the formatting to obstaclelist (after the image loads)
+      im.onload = function()
+      {
+        obstaclelist[obstacle] = {width: obstacleobj[obstacles.indexOf(obstacle)].naturalWidth, height: obstacleobj[obstacles.indexOf(obstacle)].naturalHeight}
+      }
+    }
+    carimg = new Image()
+    carimg.src = "car.jpeg"
+
+    for (let i = 1; i < 18; i++) {
+      im = new Image()
+      im.src = "explosion/" + i + ".png"
+      crashanimobj.push(im)
+    }
+  }
+  function startgame() {
+    clearInterval(gamesim) // just in case the game's already running
+
+    // variable time
+    carlane = 2 // which lane the car is currently on (top to bottom)
+    time = 0 // time elapsed in frames
+    speed = 0 // horizontal speed in px/frame, related to time (look in loadframe) capped at 20
+    difficulty = 100 // amount of frames per obstacle spawned, lowers depending on the difficulty every obstacle, capped at 25
+    distance = 0
+    lanechain = 0
+    // additionally, the lower (harder) the difficulty, the higher the chance for double-lane combos
+    framesuntilobstacle = difficulty
+    crashed = false
+    alertcounter = 25
+    nearmisscounter = 0
+    lastchain = false
+
+    separator1offset = Math.random()*lineLength*2
+    separator2offset = Math.random()*lineLength*2
+    
+
+    activeobstacles = []
+
+    //reset the instructions
+    document.getElementById("errormessages").innerHTML = "Use the up and down arrow keys to move up and down"
+    
+    gamesim = setInterval(loadframe, 20)
+  }
+
+  function loadframe() {
+    // logic stuff
+    time++ // increase time. ALWAYS GO FIRST
+    framesuntilobstacle--
+
+    if (lastchain) {
+      lastchain = false
+      chainlane = 0
+    }
+    
+    if (framesuntilobstacle <= 0) {
+      if (Math.random()*100<speed-15) {
+        if (lanechain == 0) {
+          lanechain = 5
+          chainlane = carlane
+        }
+      }
+      if (lanechain > 0) {
+        lanechain--
+        if (lanechain == 0) { //lane chain reached 0
+          chainlane = Math.ceil(Math.random()*3)
+          while (chainlane == 2) { //same as below
+            chainlane = Math.ceil(Math.random()*3)
+          }
+          lastchain = true
+        }
+      }
+      if (lanechain > 0) {
+        if (chainlane == 2)
+        {
+          chainlane = Math.ceil(Math.random()*3)
+          while (chainlane == 2) { //make sure it changes
+            chainlane = Math.ceil(Math.random()*3)
+          }
+        } else {
+          chainlane = 2 //Math.random() > 0? 2 : chainlane
+        }
+      }
+      //Roll a number 0-100. If the number is BIGGER than difficulty, then spawn a double-lane
+      spawnobstacle(lanechain > 0? true: Math.random()*100>difficulty,chainlane)
+      if (difficulty > 75) {
+        difficulty -= 5
+      } else if (difficulty > 50) {
+        difficulty -= 3
+      } else if (difficulty > 35) {
+        difficulty -= 2
+      } else if (difficulty > 25) {
+        difficulty -= 1
+      }
+      framesuntilobstacle = lanechain > 0? Math.round(difficulty/1.5) : difficulty
+    }
+    speed = speed >= 20 ? 18.5 + 0.001*time : 5 + 0.01*time
+    distance += speed/22500
+    
+    var removeObstacleCount = 0
+
+    for (const obstacle of activeobstacles) {
+      obstacle[2] -= speed
+      if (obstacle[2] <= -500) { //check if out of bounds
+        removeObstacleCount++
+      }
+      var obstacletemp = obstacleobj[obstacles.indexOf(obstacle[0])]
+      // the next if statements are getting kind of ridiculous so i just this if statement outside
+      if (obstacle[1] == carlane) {
+        // SIMPLIFICATION: if right bound of obstacle > left bound of car
+        if (obstacle[2] + (obstacletemp.naturalWidth/(obstacletemp.naturalHeight/scale))/2 > 200-carimg.naturalWidth/(carimg.naturalHeight/scale)/2) {
+          // second check if left bound of obstacle < right bound of car
+          if (obstacle[2] - (obstacletemp.naturalWidth/(obstacletemp.naturalHeight/scale))/2 < 200+carimg.naturalWidth/(carimg.naturalHeight/scale)/2)
+          {
+            console.log("prepare for obliteration")
+            endgame() // crash, the car's inside the obstacle image
+            return
+          //another check to see if it was a near miss (left bound of obstacle < right bound of car + 10)
+          } else if (obstacle[2] - (obstacletemp.naturalWidth/(obstacletemp.naturalHeight/scale))/2 < 200+carimg.naturalWidth/(carimg.naturalHeight/scale)/2+20) {
+            //it was a near miss
+            if (nearmisscounter == 0) {
+              nearmisscounter = 25
+            }
+          }
+        }
+      }
+    }
+    
+    while (removeObstacleCount > 0)
+    {
+      activeobstacles.shift()
+      removeObstacleCount--
+    }
+
+    separator1offset -= speed
+    while (separator1offset < 0) {
+      separator1offset += lineLength*2
+    }
+    separator2offset -= speed
+    while (separator2offset < 0) {
+      separator2offset += lineLength*2
+    }
+
+    //document.getElementById("errormessages").innerHTML = "1: " + separator1offset + ", 2: " + separator2offset + ", linelength: " + lineLength
+
+    //draw the current frame
+    drawframe()
+  }
+
+  function drawframe() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height) //clear to draw new imgs
+    ctx.beginPath()
+    ctx.fillStyle = "#606060"
+    ctx.rect(0, 0, canvas.width, canvas.height)
+    ctx.fill()
+    ctx.beginPath()
+    
+    // this WILL draw every obstacle in activeobstacles. make sure everything is sorted out in loadframe, not here
+    for (const obstacle of activeobstacles) {
+      getObstacle = obstacleobj[obstacles.indexOf(obstacle[0])]
+      var obstacleposfix = imgcoordfix(obstacle[0], [obstacle[2], obstacle[1]*150-75])
+      ctx.drawImage(getObstacle, obstacleposfix[0], obstacleposfix[1], (obstaclelist[obstacle[0]].width/(obstaclelist[obstacle[0]].height/scale)), scale)
+    }
+    
+    //draw lane lines
+    ctx.strokeStyle = "#dddd00"
+    ctx.lineWidth = 5
+    for (let i = 150; i < 450; i += 150) //repeat twice, one at 150 another at 300
+    {
+      var horizontalLinePos = (i==150? separator1offset : separator2offset)-lineLength*2
+      var lineThisIteration = true
+      ctx.moveTo(horizontalLinePos,i)
+      while (horizontalLinePos < 900+lineLength) //repeat until reaches screen border
+      {
+        if (lineThisIteration) { //alternating system, deciding whether to draw or not
+          // this is used to create a dashed line so we can tell that the car is moving
+          ctx.lineTo(horizontalLinePos, i)
+          //ctx.stroke()
+          //document.getElementById("errormessages").innerHTML += ", lT: " + horizontalLinePos
+          
+        } else {
+          ctx.moveTo(horizontalLinePos, i)
+          //document.getElementById("errormessages").innerHTML += ", mT: " + horizontalLinePos
+        }
+        horizontalLinePos += lineLength //move the drawer 50 px right for next time
+        lineThisIteration = !lineThisIteration
+      }
+    }
+    
+    //speed dial
+    ctx.stroke()
+    ctx.beginPath()
+    //ctx.moveTo(105,55)
+    ctx.lineWidth = 2
+    ctx.strokeStyle = "#000000"
+    ctx.fillStyle = "#333333"
+    ctx.arc(55, 55, 50, 0, Math.PI*2)
+    ctx.fill()
+    ctx.stroke()
+    ctx.beginPath()
+    ctx.fillStyle = "#ffffff"
+    ctx.font = "8px verdana"
+    ctx.textAlign = "center"
+    var counter = 0
+    //draw the speed dial numbers
+    for (let i = (Math.PI*5)/4; i > (Math.PI*-1)/4; i -= ((Math.PI*3)/2)/8) {
+      counter += 20
+      ctx.fillText(counter, Math.cos(i)*40+55, -Math.sin(i)*40+57)
+    }
+    ctx.beginPath()
+    //alert sign when full speed
+    if (speed >= 20) {
+      alertcounter--
+      if (alertcounter < -25) {
+        alertcounter = 25
+      } else if (alertcounter < 0){ //draw the warning
+        ctx.fillStyle = "#dddd00"
+        ctx.strokeStyle = "#000000"
+        ctx.lineCap = "round"
+        ctx.moveTo(55, 75)
+        ctx.lineTo(65, 95)
+        ctx.lineTo(45, 95)
+        ctx.lineTo(55, 75)
+        ctx.fill()
+        ctx.stroke()
+        ctx.fillStyle = "#000000"
+        ctx.font = "16px verdana"
+        ctx.textAlign = "center"
+        ctx.fillText("!", 55, 93)
+        ctx.lineCap = "butt"
+        ctx.beginPath()
+      }
+    }
+
+    //red speed indicator (the whole point of the speed dial)
+    ctx.fillStyle = "#ff0000"
+    var speedDirection = ((-1.75*speed+27.5)*Math.PI)/20 //rotation of the speed indicator in radians
+    speedDirection += Math.random()*speed*0.01-((speed*0.01)/2)
+    //these silly little lines draw the speed indicator. its just a long skinny triangle
+    ctx.moveTo(55+Math.cos(speedDirection+Math.PI/2)*3, 55+Math.sin(speedDirection+Math.PI/2)*-3)
+    ctx.lineTo(55+Math.cos(speedDirection)*45, 55+Math.sin(speedDirection)*-45)
+    ctx.lineTo(55+Math.cos(speedDirection-Math.PI/2)*3, 55+Math.sin(speedDirection-Math.PI/2)*-3)
+    ctx.lineTo(55+Math.cos(speedDirection+Math.PI/2)*3, 55+Math.sin(speedDirection+Math.PI/2)*-3)
+    ctx.fill()
+
+    ctx.beginPath()
+    //center knob
+    ctx.fillStyle = "#000000"
+    ctx.arc(55, 55, 5, 0, Math.PI*2)
+    ctx.fill()
+
+    ctx.beginPath()
+    //mileage
+    //bg first
+    ctx.fillStyle = "#333333"
+    ctx.strokeStyle = "#050505"
+    ctx.rect(5, 400, 100, 45)
+    ctx.fill()
+    ctx.stroke()
+    ctx.beginPath()
+    ctx.fillStyle = "#101010" //shadows
+    ctx.rect(5, 440, 100, 5)
+    ctx.rect(5, 400, 3, 45)
+    ctx.fill()
+    ctx.beginPath()
+    //do the thing! you know, the thing...
+    ctx.fillStyle = "#ff" + hexadecimalize(Math.max(255-distance*10,0)) + hexadecimalize(Math.max(255-distance*10,0))
+    ctx.font = "30px verdana"
+    ctx.textAlign = "right"
+    ctx.fillText(Math.floor(distance*10)/10, 80, 435)
+    ctx.font = "12px verdana"
+    ctx.textAlign = "left"
+    ctx.fillText("MI", 85, 435)
+    
+    //                                         vvvvvvvv   this formula converts carlane to an actual position
+    carfixpos = imgcoordfix("car.jpeg", [200,carlane*150-75])
+    // this formula scales the image down to height 100, but keeps ratio vvvvvvvvvvv
+    ctx.drawImage(carimg, carfixpos[0], carfixpos[1], carimg.naturalWidth/(carimg.naturalHeight/scale), scale)
+
+    //near miss "!"
+    if (nearmisscounter > 0) {
+      ctx.font = "40px trebuchet ms"
+      ctx.fillStyle = "rgb(255 125 0 / " + (100/25)*nearmisscounter + "%)"
+      ctx.fillText("!",205+(carimg.naturalWidth/(carimg.naturalHeight/scale))/2,carlane*150-75)
+      nearmisscounter--
+    }
+  }
+
+  function spawnobstacle(doublelane, doublelanereq) { // CALL TO SPAWN COMPLETELY RANDOM OBSTACLE, DOUBLELANE IS A BOOL
+    //DOUBLELANEREQ IS A NUMBER AND WILL PREVENT AN OBSTACLE FROM SPAWNING ON THAT LANE, IF ITS INVALID IT WILL BE IGNORED
+    if (doublelane) {
+      lane1 = Math.ceil(Math.random()*3)
+      lane2 = lane1
+      if (doublelanereq != null) {
+        //this is to make sure we get a different lane each time, also to not spawn on doublelanereq lane
+        while (lane2 == lane1 || (lane1 == doublelanereq || lane2 == doublelanereq))
+        {
+          lane1 = Math.ceil(Math.random()*3)
+          lane2 = Math.ceil(Math.random()*3)
+        }
+      } else {
+        while (lane2 == lane1) //same as the other, without the requirement
+        {
+          lane2 = Math.ceil(Math.random()*3)
+        }
+      }
+      activeobstacles.push([obstacles[Math.floor(Math.random()*obstacles.length)], lane1,1400])
+      activeobstacles.push([obstacles[Math.floor(Math.random()*obstacles.length)], lane2,1400])
+    } else {
+      activeobstacles.push([obstacles[Math.floor(Math.random()*obstacles.length)], Math.ceil(Math.random()*3),1400])
+    }
+  }
+
+  function endgame() { // CALL THIS FUNCTION WHEN THE CAR CRASHES
+    document.getElementById("errormessages").innerHTML = "Heh. Your car blew up. What a loser."
+    crashed = true
+    clearInterval(gamesim)
+    crashanimcounter = 0
+    gamesim = setInterval(crashanim, 100)
+  }
+
+  function crashanim() {
+    crashanimcounter++
+    if (crashanimcounter >= 18) {
+      clearInterval(gamesim)
+      return
+    }
+    drawframe()
+    // this got really messy real quick, its just a big ol formula for getting the correct position of where the crash imgs should be
+    crashposfix = [200-(crashanimobj[crashanimcounter-1].naturalWidth/(crashanimobj[crashanimcounter-1].naturalHeight/200))/2,carlane*150-75-100]
+    ctx.drawImage(crashanimobj[crashanimcounter-1], crashposfix[0], crashposfix[1], crashanimobj[crashanimcounter-1].naturalWidth/(crashanimobj[crashanimcounter-1].naturalHeight/200), 200) //winner of the longest line of code
+  }
+
+  document.addEventListener("keydown", function(event) {
+    //this is for detecting keypresses, the only ones we need are:
+    //"ArrowUp", "ArrowDown", "KeyW", "KeyS"
+    if (!crashed) {
+      if (event.code == "ArrowUp" || event.code == "KeyW") {
+        if (carlane != 1)
+        {
+        carlane--
+        }
+      }
+      else if (event.code == "ArrowDown" || event.code == "KeyS") {
+        if (carlane != 3)
+        {
+          carlane++
+        }
+      }
+    }
+  })
+
+  //converts a base10 number to base16 STRING using letters for the last 5
+  function hexadecimalize(num) { //ONLY CONVERTS NUMBERS UP TO 255!! Any decimals WILL be IGNORED!
+    var hexaList = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"]
+    floornum = Math.floor(num)
+    return hexaList[Math.floor(floornum/16)] + hexaList[floornum%16]
+  }
+
+  // NOTE: THIS FUNCTION HAS BEEN ADAPTED TO USE THE MODIFIED DIMENSIONS OF EACH IMAGE (100 height)
+  function imgcoordfix(imagename,coord) { // use "car.jpeg" to use car
+    if (imagename == "car.jpeg") {
+      return [coord[0]-(carimg.naturalWidth/(carimg.naturalHeight/scale))/2,coord[1]-scale/2]
+    }
+    return [coord[0]-(obstaclelist[imagename].width/(obstaclelist[imagename].height/scale))/2,coord[1]-scale/2]
+  }
+
+  //lT: 5.29268280145763, mT: 55.29268280145763, lT: 105.29268280145763, mT: 155.29268280145763, lT: 205.29268280145763, mT: 255.29268280145763, ||| lT: 16.903780791254754, mT: 66.90378079125475, lT: 116.90378079125475, mT: 166.90378079125475, lT: 216.90378079125475, mT: 266.90378079125475
+  //lT: 45.24268280145763, mT: 95.24268280145763, lT: 145.24268280145765, mT: 195.24268280145765, lT: 245.24268280145765, mT: 295.24268280145765, ||| lT: 6.853780791254754, mT: 56.853780791254756, lT: 106.85378079125476, mT: 156.85378079125476, lT: 206.85378079125476, mT: 256.85378079125474
+
+  function smartcar() {
+    const carposx = 200;
+    const carimgwidth = carimg.naturalWidth / (carimg.naturalHeight / 100) / 2;
+    var Avaliable = [1,2,3]
+
+    const ClosestObstacles = activeobstacles.filter(x => x[1]);
+    const XObstacles = ClosestObstacles.filter(x => x[2]);
+    
+    
+    for (const obstacle of XObstacles) {
+        const obstacletemp = obstacleobj[obstacles.indexOf(obstacle[0])]
+        const obstacleWidth = obstacletemp.naturalWidth / (obstacletemp.naturalHeight / 100) / 2;
+        const obstaclePosX = obstacle[2]; 
+        
+        if (Avaliable.length==1) {break}
+        if (obstaclePosX - obstacleWidth < carposx + carimgwidth*1.5 &&
+            obstaclePosX + obstacleWidth > carposx - carimgwidth*1.5) {
+            Avaliable = Avaliable.filter(x => x!==obstacle[1])
+            continue
+        }
+    }
+
+    
+    carlane = Avaliable.includes(carlane) ? carlane : Avaliable[0];
+  }
+</script>
+</body>
+</html>
