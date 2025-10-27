@@ -1,1 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Help</title>
+  <style>
+    :root {
+      --bg-1: #07070a;
+      --bg-2: #0f1724;
+      --danger: #ff2e2e;
+      --danger-dark: #a11b1b;
+      --glass: rgba(255,255,255,0.04);
+      --muted: #94a3b8;
+    }
 
+    html,body {
+      height: 100%;
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(255,0,0,0.03), transparent 6%),
+                  linear-gradient(180deg, var(--bg-1), var(--bg-2));
+      color: #e6eef8;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Center container */
+    .stage {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    /* Ominous central button */
+    .ominous-btn {
+      --size: 220px;
+      width: var(--size);
+      height: var(--size);
+      border-radius: 50%;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      background: radial-gradient(circle at 30% 25%,
+                  rgba(255,255,255,0.05), transparent 20%),
+                  linear-gradient(180deg, var(--danger), var(--danger-dark));
+      box-shadow:
+        0 6px 30px rgba(255,46,46,0.14),
+        0 0 40px rgba(255,46,46,0.18),
+        inset 0 -6px 18px rgba(0,0,0,0.3);
+      display: grid;
+      place-items: center;
+      transform: translateZ(0);
+      transition: transform .16s ease, box-shadow .16s ease;
+      position: relative;
+      user-select: none;
+    }
+
+    /* Pulsing ring */
+    .ominous-btn::before {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      border-radius: 50%;
+      box-shadow: 0 0 0 6px rgba(255,46,46,0.05);
+      opacity: 0.9;
+      animation: pulse 2.2s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(.9); opacity: 0.7; }
+      50% { transform: scale(1.08); opacity: 0.22; }
+      100% { transform: scale(.9); opacity: 0.7; }
+    }
+
+    .ominous-btn:hover {
+      transform: translateY(-6px) rotate(-1deg) scale(1.03);
+      box-shadow:
+        0 12px 48px rgba(255,46,46,0.18),
+        0 0 70px rgba(255,46,46,0.22),
+        inset 0 -10px 28px rgba(0,0,0,0.36);
+    }
+
+    .ominous-btn:active { transform: scale(.98); }
+
+    .btn-label {
+      text-align: center;
+      line-height: 1;
+      transform: translateY(-4px);
+    }
+    .btn-label .big {
+      display: block;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+    }
+    .btn-label .small {
+      display:block;
+      font-size: 12px;
+      opacity: 0.86;
+      font-weight: 700;
+      margin-top: 6px;
+      color: rgba(0,0,0,0.05);
+      mix-blend-mode: multiply;
+    }
+
+    /* Hint under button */
+    .hint {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      opacity: 0.95;
+    }
+
+    /* Dialog overlay (hidden until triggered) */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5,6,10,0.62);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 50;
+    }
+
+    .dialog {
+      width: 100%;
+      max-width: 520px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      border-radius: 12px;
+      padding: 22px;
+      color: #e6eef8;
+      box-shadow: 0 20px 80px rgba(2,6,23,0.8);
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .dialog .title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--danger);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dialog p {
+      margin: 12px 0 6px;
+      color: #cbd5e1;
+    }
+
+    .dialog .actions {
+      margin-top: 14px;
+      display:flex;
+      gap: 10px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    .btn {
+      padding: 10px 14px;
+      border-radius: 9px;
+      border: 0;
+      cursor: pointer;
+      font-weight: 700;
+      min-width: 120px;
+    }
+    .btn-safe { background: rgba(255,255,255,0.06); color: #e6eef8; }
+    .btn-home { background: linear-gradient(180deg,#4f46e5,#4338ca); color: white; }
+
+    footer {
+      position: fixed;
+      bottom: 10px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      z-index: 10;
+    }
+
+    /* Accessibility focus styles */
+    .ominous-btn:focus-visible,
+    .btn:focus-visible {
+      outline: 3px solid rgba(255,46,46,0.18);
+      outline-offset: 6px;
+      border-radius: 50%;
+    }
+
+    /* Responsive size tweak */
+    @media (max-width:520px) {
+      .ominous-btn { --size: 170px; }
+      .btn-label .big { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div>
+      <!-- Ominous central button -->
+      <button id="ominous" class="ominous-btn" aria-haspopup="dialog" aria-controls="dialog" aria-label="Ominous install button">
+        <span class="btn-label">
+          <span class="big">INSTALL</span>
+          <span class="small">Click to run</span>
+        </span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- modal / dialog -->
+  <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+    <div class="dialog" id="dialog">
+      <div class="title" id="dialog-title">⚠️ VIRUS INSTALLED ⚠️</div>
+      <p class="lead" style="margin-top:10px; font-weight:800; color:var(--danger);">VIRUS INSTALLED</p>
+
+      <div class="actions">
+        <button id="dismiss" class="btn btn-safe">Close</button>
+        <button id="go-home" class="btn btn-home">Go Home</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const ominous = document.getElementById('ominous');
+      const overlay = document.getElementById('overlay');
+      const dismiss = document.getElementById('dismiss');
+      const goHome = document.getElementById('go-home');
+
+      // Show dialog on click
+      ominous.addEventListener('click', () => {
+        overlay.style.display = 'flex';
+        // trap focus simply by focusing first interactive element
+        dismiss.focus();
+      });
+
+      // Close handlers
+      dismiss.addEventListener('click', () => overlay.style.display = 'none');
+      goHome.addEventListener('click', () => {
+        // go back — change if you want a different target
+        window.location.href = 'index.html';
+      });
+
+      // keyboard: Esc closes
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') overlay.style.display = 'none';
+      });
+
+      // Make Enter/Space on focused button also activate (button handles this natively)
+      // Slight extra: add a small precaution for accidental clicks (optional)
+      // (No destructive actions are performed; this is purely UI.)
+    })();
+  </script>
+</body>
+</html>
