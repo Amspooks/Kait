@@ -367,35 +367,32 @@ body {
 
     <div class="playlist-container">
 <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/7wOMLfkXS0oSnY6bnTRIhW?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    </div>
-	    <button id="rare-btn" aria-hidden="true">Open Secret</button>
-  </div>
 
-  <script>
-    (function () {
-      const CHANCE = 0.10; // 10%
+<!-- Rare Secret Button -->
+<div style="text-align:center; margin-top:40px;">
+  <button id="rare-btn" aria-hidden="true">What?</button>
+</div>
 
-      // Decide whether to show the rare button on each page load
-      const r = Math.random();
-      console.log("Random value:", r, "Show button:", r < CHANCE);
+<script>
+(function () {
+  const CHANCE = 0.10; // 10% chance per reload
+  const btn = document.getElementById('rare-btn');
+  const r = Math.random();
 
-      if (r < CHANCE) {
-        const btn = document.getElementById('rare-btn');
-        btn.classList.add('show');
-        btn.removeAttribute('aria-hidden');
+  console.log("Random value:", r, "Show button:", r < CHANCE);
 
-        // When clicked, go to the prank page in the same folder
-        btn.addEventListener('click', () => {
-          // navigate to prank page (file name below)
-          window.location.href = '???.html';
-        });
+  if (r < CHANCE) {
+    btn.classList.add('show');
+    btn.removeAttribute('aria-hidden');
 
-        // Optional: give keyboard users a nice focus
-        btn.addEventListener('animationend', () => btn.focus());
-      }
-    })();
-  </script>
-  </script>
+    btn.addEventListener('click', () => {
+      window.location.href = '???.html'; // replace ???.html
+    });
+
+    btn.addEventListener('animationend', () => btn.focus());
+  }
+})();
+</script>
 </body>
 </html>
 </body>
