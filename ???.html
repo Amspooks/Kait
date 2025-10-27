@@ -217,7 +217,7 @@
   <!-- modal / dialog -->
   <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
     <div class="dialog" id="dialog">
-      <div class="title" id="dialog-title">⚠️ VIRUS INSTALLED ⚠️</div>
+      <div class="title" id="dialog-title">VIRUS INSTALLED</div>
       <p class="lead" style="margin-top:10px; font-weight:800; color:var(--danger);">VIRUS INSTALLED</p>
 
       <div class="actions">
@@ -259,5 +259,46 @@
       // (No destructive actions are performed; this is purely UI.)
     })();
   </script>
+
+  <script>
+(function () {
+  const ominous = document.getElementById('ominous');
+  const overlay = document.getElementById('overlay');
+  const dismiss = document.getElementById('dismiss');
+  const goHome = document.getElementById('go-home');
+  let timer;
+
+  // Show dialog on click
+  ominous.addEventListener('click', () => {
+    overlay.style.display = 'flex';
+    dismiss.focus();
+
+    // Start a harmless 10-second prank timer
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      alert("💀 I'm inside 😈 (just kidding!)");
+    }, 10000);
+  });
+
+  // Close handlers
+  dismiss.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    clearTimeout(timer);
+  });
+
+  goHome.addEventListener('click', () => {
+    clearTimeout(timer);
+    window.location.href = 'index.html';
+  });
+
+  // keyboard: Esc closes
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      overlay.style.display = 'none';
+      clearTimeout(timer);
+    }
+  });
+})();
+</script>
 </body>
 </html>
