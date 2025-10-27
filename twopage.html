@@ -124,9 +124,9 @@ body {
   <audio id="sound1" src="Yippee.mp3" preload="auto"></audio>
 	<button id="playRandomSound" style="background-color: black;color:green;border-radius:5px;" onclick="clickSoundButton()" title="Don't do it">
 
-    <audio id="sound2" src="sound1.mp3"></audio>
-    <audio id="sound3" src="sound2.mp3"></audio>
-    <audio id="sound4" src="sound3.mp3"></audio>
+    <audio id="sound2" src="sm64_mario_boing.wav"></audio>
+    <audio id="sound3" src="sm64_mario_game_over.wav"></audio>
+    <audio id="sound4" src="sm64_mario_here_we_go.wav"></audio>
     <!-- Add more audio elements as needed -->
 
     <script src="script.js"></script>
@@ -136,7 +136,7 @@ body {
       function clickSoundButton() {
         counter1++;
         console.log(counter1)
-        document.getElementById('sound1').cloneNode(true).play();
+        document.getElementById('sound2').cloneNode(true).play();
         if (counter1 >= 10)
         {
           window.open("https://www.youtube.com/shorts/YFRRwPNKv0A");
@@ -146,7 +146,7 @@ body {
       function clickSoundButton() {
         counter1++;
         console.log(counter1)
-        document.getElementById('sound2').cloneNode(true).play();
+        document.getElementById('sound3').cloneNode(true).play();
         if (counter1 >= 10)
         {
           window.open("https://www.youtube.com/shorts/YFRRwPNKv0A");
@@ -156,7 +156,7 @@ body {
       function clickSoundButton() {
         counter1++;
         console.log(counter1)
-        document.getElementById('sound3').cloneNode(true).play();
+        document.getElementById('sound4').cloneNode(true).play();
         if (counter1 >= 10)
         {
           window.open("https://www.youtube.com/shorts/YFRRwPNKv0A");
@@ -317,6 +317,7 @@ body {
     });
 });
 </script>
+	<script>
 	  <audio src="rouxl.mp3" autoplay>
     </script>
 	<!DOCTYPE html>
