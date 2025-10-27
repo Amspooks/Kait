@@ -3,6 +3,52 @@
 <link rel="stylesheet" type="text/css" href="styles.css" />
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <style>
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      background: #f6f8fb;
+      margin: 0;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    /* Button is hidden by default for no-JS safety */
+    #rare-btn {
+      display: none;
+      padding: 12px 18px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 0;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      transition: transform .18s ease, opacity .18s ease;
+      background: linear-gradient(180deg,#4f46e5,#4338ca);
+      color: white;
+    }
+
+    /* small pop animation when it becomes visible */
+    #rare-btn.show {
+      display: inline-block;
+      transform: scale(0.9);
+      opacity: 0;
+      animation: pop .25s forwards;
+    }
+    @keyframes pop {
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .info {
+      margin-bottom: 10px;
+      color: #333;
+    }
+  </style>
+
 <style>
 	#flyButton {
   position: relative; /* Needed for animations */
@@ -335,6 +381,41 @@ body {
     <div class="playlist-container">
 <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/7wOMLfkXS0oSnY6bnTRIhW?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     </div>
+	</head>
+<body>
+  <div class="container">
+    <div class="info">Reload the page — the special button has a 10% chance to appear.</div>
+
+    <!-- Hidden by default for users without JS -->
+    <button id="rare-btn" aria-hidden="true">Surprise Button</button>
+  </div>
+
+  <script>
+    (function () {
+      // probability: 0.10 = 10%
+      const CHANCE = 0.10;
+
+      // generate random number [0,1)
+      const r = Math.random();
+
+      // debug: log to console what happened (remove in prod if you want)
+      console.log("Random value:", r, "Show button:", r < CHANCE);
+
+      if (r < CHANCE) {
+        const btn = document.getElementById('rare-btn');
+        // make it visible
+        btn.classList.add('show');
+        btn.removeAttribute('aria-hidden');
+
+        // example behavior when clicked (safe)
+        btn.addEventListener('click', () => {
+          alert("You found the rare button! 🎉");
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
 </body>
 </html>
 </body>
