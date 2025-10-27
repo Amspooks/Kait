@@ -372,27 +372,31 @@ body {
 <div style="text-align:center; margin-top:40px;">
   <button id="rare-btn" aria-hidden="true">What?</button>
 </div>
-<button id="rare-btn" aria-hidden="true">???</button>
-<script>
-(function () {
-  const CHANCE = 1.00; // 10% chance per reload
-  const btn = document.getElementById('rare-btn');
-  const r = Math.random();
 
-  console.log("Random value:", r, "Show button:", r < CHANCE);
+		<body>
+  <button id="rare-btn" aria-hidden="true">???</button>
 
-  if (r < CHANCE) {
-    btn.classList.add('show');
-    btn.removeAttribute('aria-hidden');
+  <script>
+  (function () {
+    const CHANCE = 0.10; // 10% chance per reload
+    const btn = document.getElementById('rare-btn');
+    const r = Math.random();
 
-    btn.addEventListener('click', () => {
-      window.location.href = '???.html'; // replace ???.html
-    });
+    console.log("Random value:", r, "Show button:", r < CHANCE);
 
-    btn.addEventListener('animationend', () => btn.focus());
-  }
-})();
-</script>
+    if (r < CHANCE) {
+      btn.classList.add('show');
+      btn.removeAttribute('aria-hidden');
+
+      btn.addEventListener('click', () => {
+        window.location.href = 'virus.html'; // your target page
+      });
+
+      btn.addEventListener('animationend', () => btn.focus());
+    }
+  })();
+  </script>
+</body>
 </body>
 </html>
 </body>
